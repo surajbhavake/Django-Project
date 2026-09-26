@@ -185,3 +185,36 @@ class URLAPITests(APITestCase):
         )
 
         self.assertEqual(URL.objects.count(), 0)
+
+    def test_url_that_is_too_long_is_rejected(self):
+        long_url = "https://example.com/" + ("a" * 2030)
+
+        response = self.client.post(
+            "/api/urls/",
+            {"original_url": long_url},
+            format="json",
+        )
+
+        self.assertEqual(
+            response.status_code,
+            status.HTTP_400_BAD_REQUEST,
+        )
+
+        self.assertEqual(URL.objects.count(), 0)
+
+    def test_url_at_maximum_length_is_accepted(self):
+        prefix = "https://example.com/"
+        remaining_length = 2048 - len(prefix)
+
+        valid_url = prefix + ("a" * remaining_length)
+
+        response = self.client.post(
+            "/api/urls/",
+            {"original_url": valid_url},
+            format="json",
+        )
+
+        self.assertEqual(
+            response.status_code,
+            status.HTTP_201_CREATED,
+        )
