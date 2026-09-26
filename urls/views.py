@@ -1,15 +1,13 @@
-from django.shortcuts import render
+
 
 # Create your views here.
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from  .serializers import URLSerializer
-from .utils import generate_short_code
-from .models import URL
 from django.shortcuts import redirect
 from .services import create_url,delete_url,get_url_by_id
-
+from .models import URL
 
 class URLListCreateView(APIView):
 
@@ -38,9 +36,8 @@ class URLListCreateView(APIView):
 
 class URLDetailView(APIView):
      def get(self,request,pk):
-          try:
-               url = get_url_by_id(pk)
-          except URL.DoesNotExist:
+          url = get_url_by_id(pk)
+          if url is None:
                return Response(
                     {
                          'detail':'URL not found'
@@ -51,9 +48,8 @@ class URLDetailView(APIView):
           return Response(serializer.data)
 
      def delete(self,request,pk):
-          try:
-               url =get_url_by_id(pk)
-          except URL.DoesNotExist:
+          url =get_url_by_id(pk)
+          if url is None:
                return Response(
                     {'detail':'URL not found'},
                     status=status.HTTP_404_NOT_FOUND,

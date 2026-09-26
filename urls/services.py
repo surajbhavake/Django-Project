@@ -9,7 +9,7 @@ def create_url(original_url):
     )
 
 def get_url_by_id(pk):
-    return URL.objects.get(pk=pk)
+    return URL.objects.filter(pk=pk).first()
 
 def delete_url(url):
-    url.delete
+    url.delete()
