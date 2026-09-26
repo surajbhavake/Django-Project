@@ -172,3 +172,16 @@ class URLAPITests(APITestCase):
                 original_url="https://github.com",
                 short_code="abc123",
             )
+    def test_ftp_url_is_rejected(self):
+        response = self.client.post(
+            "/api/urls/",
+            {"original_url": "ftp://example.com"},
+            format="json",
+        )
+
+        self.assertEqual(
+            response.status_code,
+            status.HTTP_400_BAD_REQUEST,
+        )
+
+        self.assertEqual(URL.objects.count(), 0)
