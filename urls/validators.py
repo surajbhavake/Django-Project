@@ -4,6 +4,7 @@ from rest_framework import serializers
 
 MAX_URL_LENGTH = 2048
 
+ALLOWED_SCHEMES = ('http', 'https')
 def validate_original_url(value):
     if len(value) > MAX_URL_LENGTH:
         raise serializers.ValidationError(
@@ -11,7 +12,7 @@ def validate_original_url(value):
         )
     parsed_url = urlparse(value)
 
-    if parsed_url.scheme not in ('https','http'):
+    if parsed_url.scheme not in ALLOWED_SCHEMES:
         raise serializers.ValidationError('Only HTTP and HTTPS URLs are allowed')
 
     if not parsed_url.netloc:
