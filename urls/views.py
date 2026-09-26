@@ -7,7 +7,7 @@ from rest_framework.views import APIView
 from  .serializers import URLSerializer
 from .utils import generate_short_code
 from .models import URL
-
+from django.shortcuts import redirect
 
 
 class URLListCreateView(APIView):
@@ -65,4 +65,15 @@ class URLDetailView(APIView):
                status=status.HTTP_204_NO_CONTENT
           )
 
-    
+
+class URlRedirectView(APIView):
+     def get(self,request,short_code):
+          try:
+               url = URL.objects.get(short_code=short_code)
+          except URL.DoesNotExist:
+               return Response(
+                    {'detail': ' Short URL not found'},
+                    status= status.HTTP_404_NOT_FOUND,
+               )
+
+          return redirect(url.original_url)
