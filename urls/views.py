@@ -8,6 +8,7 @@ from  .serializers import URLSerializer
 from .utils import generate_short_code
 from .models import URL
 from django.shortcuts import redirect
+from .services import create_url
 
 
 class URLListCreateView(APIView):
@@ -22,9 +23,7 @@ class URLListCreateView(APIView):
         serialzier = URLSerializer(data = request.data)
 
         if serialzier.is_valid():
-            url = serialzier.save(
-                short_code = generate_short_code()
-            )
+            url = create_url(serialzier.validate_data['original_url'])
 
             return Response(
                 URLSerializer(url).data,
