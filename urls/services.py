@@ -7,3 +7,9 @@ def create_url(original_url):
         original_url = original_url,
         short_code = generate_short_code(),
     )
+
+def get_url_by_id(pk):
+    return URL.objects.get(pk=pk)
+
+def delete_url(url):
+    url.delete
